@@ -1,0 +1,133 @@
+import "dart:io";
+
+class Product {
+  String name;
+  String description;
+  double price;
+
+  Product(this.name, this.description, this.price);
+
+  String toString() {
+    return "\tName: $name\n\tDescription: $description\n\tprice: $price";
+  }
+}
+
+class ProductManager {
+  final List<Product> _product = [];
+
+  bool isValidIndex(index) {
+    return index >= 0 && index < _product.length;
+  }
+
+  void AddProduct(Product product) {
+    _product.add(product);
+    print("Product successfully added!");
+  }
+
+  void viewAll() {
+    if (_product.isEmpty) {
+      print("No Product");
+    } else {
+      for (int i = 0; i < _product.length; i++) {
+        print("Product ${i+1}: \n${_product[i]}");
+      }
+    }
+  }
+
+  void viewProduct(int index) {
+    if (isValidIndex(index)) {
+      print("Product: \n${_product[index]}");
+    } else {
+      print("Invalid Index!");
+    }
+  }
+
+  void editProduct(
+      int index, String newName, String newDescription, double newPrice) {
+    if (isValidIndex(index)) {
+      final product = _product[index];
+      product.name = newName;
+      product.description = newDescription;
+      product.price = newPrice;
+    } else {
+      print("Invalid Index!!!");
+    }
+  }
+
+  void deleteProduct(int index) {
+    if (isValidIndex(index)) {
+      _product.removeAt(index);
+    }
+  }
+}
+
+void main() {
+  final productManager = ProductManager();
+  bool isRunning = true;
+
+  while (isRunning) {
+    print("\nWelcome to E-Commers App");
+    print("\n1. Add Product");
+    print("2. View All Product");
+    print("3. View Product");
+    print("4. Edit Product");
+    print("5. Delete Product");
+    print("6. Exit");
+
+    stdout.write("\nEnter Your Option: ");
+    var input = stdin.readLineSync();
+
+    switch (input) {
+        case '1':
+            stdout.write("Enter Product Name: ");
+            final name = stdin.readLineSync() ?? '';
+            stdout.write("Enter Product Description: ");
+            final description = stdin.readLineSync() ?? '';
+            stdout.write("Enter Product Price: ");
+            final price = double.parse(stdin.readLineSync() ?? '0');
+
+            final product = Product(name, description, price);
+            productManager.AddProduct(product);
+            break;
+
+        case '2':
+            productManager.viewAll();
+            break;
+        case '3':
+            stdout.write("Enter index: ");
+            int index = int.parse(stdin.readLineSync() ?? '-1');
+            productManager.viewProduct(index);
+            break;
+        case '4':
+            stdout.write("Enter index: ");
+            int index = int.parse(stdin.readLineSync() ?? '-1');
+
+            stdout.write("Enter Product Name: "); 
+            final newName = stdin.readLineSync() ?? '';
+
+            stdout.write("Enter Product Description: "); 
+            final newDescription = stdin.readLineSync() ?? '';
+
+            stdout.write("Enter Product Price: "); 
+            final newPrice = double.parse(stdin.readLineSync() ?? '0');
+
+            productManager.editProduct(index, newName, newDescription, newPrice);
+            break;
+        case '5':
+            stdout.write("Enter index: ");
+            int index = int.parse(stdin.readLineSync() ?? '-1');
+
+            productManager.deleteProduct(index);
+            break;
+        case '6':
+            isRunning = false;
+            print("Exiting Application!");
+            break;
+        default:
+            print("Invalid Choice!");
+
+
+    }
+
+  }
+}
